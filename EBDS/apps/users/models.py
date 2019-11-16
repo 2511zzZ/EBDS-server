@@ -9,9 +9,11 @@ class User(AbstractUser):
     """
     用户
     """
-    employee = models.ForeignKey(Member, related_name="user_info", verbose_name='员工号', null=True, on_delete=models.CASCADE, db_constraint=False)
+    employee = models.ForeignKey(Member, related_name="user_info",
+                                 verbose_name='员工号', null=True,
+                                 on_delete=models.CASCADE, db_constraint=False)
     nickname = models.CharField(max_length=64, verbose_name="姓名", null=True)
-    icon = models.CharField(max_length=500, verbose_name='头像', blank=True, null=True)
+    icon = models.ImageField(max_length=500, verbose_name='头像', upload_to="head_photo/", blank=True, null=True)
 
     class Meta:
         db_table = 'auth_user'
