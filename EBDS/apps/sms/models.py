@@ -108,7 +108,8 @@ class TeamStatMember(models.Model):
     """
     小组工人排班表(包含历史记录)
     """
-    team = models.ForeignKey(Team, verbose_name='小组号', related_name='team_stat_member', on_delete=models.CASCADE, db_constraint=False)
+    team = models.ForeignKey(Team, verbose_name='小组号', related_name='team_stat_member',
+                             on_delete=models.CASCADE, db_constraint=False)
     stat_id = models.IntegerField(verbose_name='工位号')
     morning_shift_id = models.IntegerField(verbose_name='早班员工号', blank=True, null=True)
     middle_shift_id = models.IntegerField(verbose_name='中班员工号', blank=True, null=True)
