@@ -1,0 +1,22 @@
+from datetime import datetime
+
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from sms.models import Member
+
+
+class User(AbstractUser):
+    """
+    用户
+    """
+    employee = models.ForeignKey(Member, related_name="user_info", null=True, on_delete=models.CASCADE, db_constraint=False)
+    nickname = models.CharField(max_length=64, verbose_name="姓名", null=True)
+    icon = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        db_table = 'auth_user'
+        verbose_name = "用户"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.username
