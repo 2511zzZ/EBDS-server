@@ -46,9 +46,8 @@ INSTALLED_APPS = [
     'xadmin',
     'rest_framework',
     'corsheaders',
-    'sms',
-    'users',
-
+    'sms.apps.SmsConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
