@@ -36,14 +36,14 @@ class Member(models.Model):
 
 class Team(models.Model):
     """
-    小组结构
+    小组信息
     """
     id = models.IntegerField(verbose_name='小组号', primary_key=True)
     name = models.CharField(verbose_name='小组名', max_length=255)
 
     class Meta:
         db_table = 'sms_team'
-        verbose_name = "小组结构"
+        verbose_name = "小组信息"
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -52,7 +52,7 @@ class Team(models.Model):
 
 class Group(models.Model):
     """
-    大组结构
+    大组信息
     """
     id = models.IntegerField(verbose_name='大组号', primary_key=True)
     name = models.CharField(verbose_name='大组名', max_length=255)
@@ -61,7 +61,7 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'sms_group'
-        verbose_name = "大组结构"
+        verbose_name = "大组信息"
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -70,7 +70,7 @@ class Group(models.Model):
 
 class Workshop(models.Model):
     """
-    车间结构
+    车间信息
     """
     id = models.IntegerField(verbose_name='车间号', primary_key=True)
     name = models.CharField(verbose_name='车间名', max_length=255)
@@ -79,11 +79,27 @@ class Workshop(models.Model):
 
     class Meta:
         db_table = 'sms_workshop'
-        verbose_name = "车间结构"
+        verbose_name = "车间信息"
         verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.name
+
+
+class Dpt(models.Model):
+    """
+    生产部信息
+    """
+    employee = models.ForeignKey(Member, verbose_name='生产部管理员工号',
+                                 on_delete=models.CASCADE, db_constraint=False)
+
+    class Meta:
+        db_table = 'sms_dpt_manager'
+        verbose_name = "生产部信息"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return "生产部"
 
 
 class TeamGroupWorkshop(models.Model):

@@ -80,8 +80,8 @@ class CfgWorkPeriod(models.Model):
         (2, "中"),
         (3, "晚")
     )
-    name = models.IntegerField(verbose_name='员工号', blank=True, null=True)
-    start_time = models.TimeField(verbose_name='开始时间', blank=True, null=True, choices=TIME_CHOICES)
+    name = models.IntegerField(verbose_name='时间段', blank=True, null=True, choices=TIME_CHOICES)
+    start_time = models.TimeField(verbose_name='开始时间', blank=True, null=True)
     end_time = models.TimeField(verbose_name='结束时间', blank=True, null=True)
 
     class Meta:

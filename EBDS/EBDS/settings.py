@@ -48,9 +48,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'sms.apps.SmsConfig',
     'users.apps.UsersConfig',
-    'standard.apps.StandardConfig',
     'ams.apps.AmsConfig',
     'cfg.apps.CfgConfig',
+    'dms.apps.DmsConfig',
+    'standard.apps.StandardConfig',
 ]
 
 MIDDLEWARE = [
