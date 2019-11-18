@@ -10,10 +10,10 @@ def run():
     try:
         cursor.callproc('fake_dms_dpt_daily')
         db.commit()
-        # cursor.callproc('fake_dms_dpt_avg')
-        # db.commit()
-        # cursor.callproc('fake_dms_dpt_online')
-        # db.commit()
+        cursor.callproc('fake_dms_dpt_avg')
+        db.commit()
+        cursor.callproc('fake_dms_dpt_online')
+        db.commit()
 
     finally:
         cursor.close()
