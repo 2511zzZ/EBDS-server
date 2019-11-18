@@ -9,7 +9,6 @@ django_formtools == 2.1
 django_import_export == 1.2.0
 djangorestframework == 3.10.3
 djangorestframework_jwt == 1.11.0
-dlitztest == 2.6
 drf_extensions == 0.5.0
 future == 0.18.2
 hands-chopping == 0.3.0

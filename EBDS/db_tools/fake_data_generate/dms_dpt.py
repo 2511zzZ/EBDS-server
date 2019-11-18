@@ -5,14 +5,16 @@ from EBDS.db_tools.fake_data_generate.tools import get_db_connector
 db = get_db_connector()
 cursor = db.cursor()
 
+
 def run():
     try:
-        cursor.callproc('fake_dms_dpt_avg')
+        cursor.callproc('fake_dms_dpt_daily')
         db.commit()
-        cursor.callproc('fake_dms_dpt_online')
-        db.commit()
-        cursor.callproc('fake_dms_team_avg')
-        db.commit()
+        # cursor.callproc('fake_dms_dpt_avg')
+        # db.commit()
+        # cursor.callproc('fake_dms_dpt_online')
+        # db.commit()
+
     finally:
         cursor.close()
         db.close()
