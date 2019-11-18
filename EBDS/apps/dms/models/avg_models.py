@@ -27,7 +27,7 @@ class DmsTeamAvg(AvgModel):
     """
     小组实时平均工作数据(最近)
     """
-    team_id = models.IntegerField(verbose_name='小组号')
+    team_id = models.IntegerField(verbose_name='小组号', db_index=True)
 
     class Meta:
         db_table = 'dms_team_avg'
@@ -74,7 +74,7 @@ class DmsStatAvg(AvgModel):
     """
     工位实时平均工作数据(最近)
     """
-    stat_id = models.IntegerField(verbose_name='工位号')
+    stat_id = models.IntegerField(verbose_name='工位号', db_index=True)
 
     class Meta:
         db_table = 'dms_stat_avg'

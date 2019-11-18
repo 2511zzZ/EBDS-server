@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'EBDS.wsgi.application'
 DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'ebds_demo',  # 数据库名(要手动创建)
+            'NAME': 'ebds',  # 数据库名(要手动创建)
             'USER': 'root',
             'PASSWORD': '',  # 把password改成空(方便版本管理)--set password=password('');
             'HOST': '127.0.0.1',

@@ -7,7 +7,7 @@ class CfgAlertCondition(models.Model):
     警报条件参数
     """
     duration = models.IntegerField(verbose_name='低于标准效率的持续时间(单位:分钟)')
-    percent = models.DecimalField(verbose_name='低于标准效率的百分比(小数表示)', max_digits=6, decimal_places=1)
+    percent = models.DecimalField(verbose_name='低于标准效率的百分比(小数表示)', max_digits=6, decimal_places=2)
 
     class Meta:
         db_table = 'cfg_alert_condition'
@@ -76,11 +76,11 @@ class CfgWorkPeriod(models.Model):
     工作时间段
     """
     TIME_CHOICES = (
-        (1, "早"),
-        (2, "中"),
-        (3, "晚")
+        ("morning", "早"),
+        ("middle", "中"),
+        ("night", "晚")
     )
-    name = models.IntegerField(verbose_name='时间段', blank=True, null=True, choices=TIME_CHOICES)
+    name = models.CharField(max_length=255, verbose_name='时间段', blank=True, null=True, choices=TIME_CHOICES)
     start_time = models.TimeField(verbose_name='开始时间', blank=True, null=True)
     end_time = models.TimeField(verbose_name='结束时间', blank=True, null=True)
 

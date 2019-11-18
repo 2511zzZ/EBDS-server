@@ -10,7 +10,7 @@ class OnlineModel(models.Model):
     efficiency = models.DecimalField(verbose_name='实时效率', max_digits=6, decimal_places=1, blank=True, null=True)
     accuracy = models.DecimalField(verbose_name='实时准确率', max_digits=6, decimal_places=1, blank=True, null=True)
     workhour = models.DecimalField(verbose_name='实时有效工时', max_digits=6, decimal_places=1, blank=True, null=True)
-    time = models.DateField(default=datetime.datetime.now, verbose_name='时间', blank=True, null=True)
+    time = models.DateTimeField(default=datetime.datetime.now, verbose_name='时间', blank=True, null=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -28,10 +28,12 @@ class DmsTeamOnline(OnlineModel):
     小组实时工作数据(24小时内)
     """
     # 历史记录具有历史性，不做外键约束
-    team_id = models.IntegerField(verbose_name='小组号')
+    team_id = models.IntegerField(verbose_name='小组号', db_index=True)
 
     class Meta:
         db_table = 'dms_team_online'
+        # 创建联合索引
+        index_together = ["team_id", "time"]
         verbose_name = "小组实时工作数据(24小时内)"
         verbose_name_plural = verbose_name
 
@@ -40,10 +42,11 @@ class DmsGroupOnline(OnlineModel):
     """
     大组实时工作数据(24小时内)
     """
-    group_id = models.IntegerField(verbose_name='大组号')
+    group_id = models.IntegerField(verbose_name='大组号', db_index=True)
 
     class Meta:
         db_table = 'dms_group_online'
+        index_together = ["group_id", "time"]
         verbose_name = "大组实时工作数据(24小时内)"
         verbose_name_plural = verbose_name
 
@@ -52,10 +55,11 @@ class DmsWorkshopOnline(OnlineModel):
     """
     车间实时工作数据(24小时内)
     """
-    workshop_id = models.IntegerField(verbose_name='车间号')
+    workshop_id = models.IntegerField(verbose_name='车间号', db_index=True)
 
     class Meta:
         db_table = 'dms_workshop_online'
+        index_together = ["workshop_id", "time"]
         verbose_name = "车间实时工作数据(24小时内)"
         verbose_name_plural = verbose_name
 
@@ -75,10 +79,11 @@ class DmsStatOnline(OnlineModel):
     """
     工位实时工作数据(24小时内)
     """
-    stat_id = models.IntegerField(verbose_name='工位号')
+    stat_id = models.IntegerField(verbose_name='工位号', db_index=True)
 
     class Meta:
         db_table = 'dms_stat_online'
+        index_together = ["stat_id", "time"]
         verbose_name = "工位实时工作数据(24小时内)"
         verbose_name_plural = verbose_name
 

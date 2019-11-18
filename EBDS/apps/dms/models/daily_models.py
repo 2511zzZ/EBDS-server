@@ -10,7 +10,7 @@ class DailyModel(models.Model):
     efficiency = models.DecimalField(verbose_name='每日效率', max_digits=6, decimal_places=1, blank=True, null=True)
     accuracy = models.DecimalField(verbose_name='每日准确率', max_digits=6, decimal_places=1, blank=True, null=True)
     workhour = models.DecimalField(verbose_name='每日有效工时', max_digits=6, decimal_places=1, blank=True, null=True)
-    time = models.DateTimeField(default=datetime.date.today, verbose_name='日期', blank=True, null=True)
+    time = models.DateField(default=datetime.date.today, verbose_name='日期', blank=True, null=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -28,10 +28,12 @@ class DmsTeamDaily(DailyModel):
     小组历史工作记录(每日)
     """
     # 历史记录具有历史性，不做外键约束
-    team_id = models.IntegerField(verbose_name='小组号')
+    team_id = models.IntegerField(verbose_name='小组号', db_index=True)
 
     class Meta:
         db_table = 'dms_team_daily'
+        # 创建联合索引
+        index_together = ["team_id", "time"]
         verbose_name = "小组历史工作记录(每日)"
         verbose_name_plural = verbose_name
 
@@ -40,10 +42,11 @@ class DmsGroupDaily(DailyModel):
     """
     大组历史工作记录(每日)
     """
-    group_id = models.IntegerField(verbose_name='大组号')
+    group_id = models.IntegerField(verbose_name='大组号', db_index=True)
 
     class Meta:
         db_table = 'dms_group_daily'
+        index_together = ["group_id", "time"]
         verbose_name = "大组历史工作记录(每日)"
         verbose_name_plural = verbose_name
 
@@ -52,10 +55,11 @@ class DmsWorkshopDaily(DailyModel):
     """
     车间历史工作记录(每日)
     """
-    workshop_id = models.IntegerField(verbose_name='车间号')
+    workshop_id = models.IntegerField(verbose_name='车间号', db_index=True)
 
     class Meta:
         db_table = 'dms_workshop_daily'
+        index_together = ["workshop_id", "time"]
         verbose_name = "车间历史工作记录(每日)"
         verbose_name_plural = verbose_name
 
@@ -75,10 +79,11 @@ class DmsStatDaily(DailyModel):
     """
     工位历史工作记录(每日)
     """
-    stat_id = models.IntegerField(verbose_name='工位号')
+    stat_id = models.IntegerField(verbose_name='工位号', db_index=True)
 
     class Meta:
         db_table = 'dms_stat_daily'
+        index_together = ["stat_id", "time"]
         verbose_name = "工位历史工作记录(每日)"
         verbose_name_plural = verbose_name
 
@@ -87,10 +92,11 @@ class DmsWorkerDaily(DailyModel):
     """
     工人历史工作记录(每日)
     """
-    employee_id = models.IntegerField(verbose_name='员工号')
+    employee_id = models.IntegerField(verbose_name='员工号', db_index=True)
 
     class Meta:
         db_table = 'dms_worker_daily'
+        index_together = ["employee_id", "time"]
         verbose_name = "工人历史工作记录(每日)"
         verbose_name_plural = verbose_name
 

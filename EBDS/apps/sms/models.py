@@ -8,10 +8,10 @@ class Member(models.Model):
     公司成员
     """
     TYPE_CHOICES = (
-        (0, "工人"),
-        (1, "大组长"),
-        (2, "经理"),
-        (3, "总经理")
+        (1, "工人"),
+        (2, "大组长"),
+        (3, "经理"),
+        (4, "总经理")
     )
     SEX_CHOICES = (
         ("male", "男"),
@@ -31,7 +31,7 @@ class Member(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.employee_id
+        return "{}-{}".format(self.employee_id, self.name)
 
 
 class Team(models.Model):
@@ -56,7 +56,8 @@ class Group(models.Model):
     """
     id = models.IntegerField(verbose_name='大组号', primary_key=True)
     name = models.CharField(verbose_name='大组名', max_length=255)
-    employee = models.ForeignKey(Member, verbose_name='大组管理员工号', related_name='employee_group',
+    employee = models.ForeignKey(Member, verbose_name='大组管理员工号',
+                                 related_name='employee_group', blank=True, null=True,
                                  on_delete=models.CASCADE, db_constraint=False)
 
     class Meta:
@@ -74,7 +75,8 @@ class Workshop(models.Model):
     """
     id = models.IntegerField(verbose_name='车间号', primary_key=True)
     name = models.CharField(verbose_name='车间名', max_length=255)
-    employee = models.ForeignKey(Member, verbose_name='车间管理员工号', related_name='employee_workshop',
+    employee = models.ForeignKey(Member, verbose_name='车间管理员工号',
+                                 related_name='employee_workshop', blank=True, null=True,
                                  on_delete=models.CASCADE, db_constraint=False)
 
     class Meta:
@@ -94,7 +96,7 @@ class Dpt(models.Model):
                                  on_delete=models.CASCADE, db_constraint=False)
 
     class Meta:
-        db_table = 'sms_dpt_manager'
+        db_table = 'sms_dpt'
         verbose_name = "生产部信息"
         verbose_name_plural = verbose_name
 
