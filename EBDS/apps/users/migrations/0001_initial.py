@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('sms', '0001_initial'),
-        ('auth', '0011_update_proxy_permissions'),
+        # ('auth', '0011_update_proxy_permissions'),
     ]
 
     operations = [
