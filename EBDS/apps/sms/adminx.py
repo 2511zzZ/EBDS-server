@@ -7,28 +7,35 @@ class MemberAdmin(object):
     list_display = ['employee_id', 'name', 'sex', 'birthday', 'birthplace', 'type']
     search_fields = ['employee_id', 'name', 'birthplace']
     list_editable = ["type", ]
-    list_filter = ['employee_id', 'name', 'sex', 'birthday', 'birthplace', 'type']
+    list_filter = ['name', 'sex', 'birthday', 'birthplace', 'type']
+    ordering = ['employee_id']
     # style_fields = {"goods_desc": "ueditor"}
 
 
 class TeamAdmin(object):
     list_display = ["id", "name"]
+    ordering = ['id']
 
 
 class GroupAdmin(object):
     list_display = ["id", "name", "employee"]
+    ordering = ['id']
 
 
 class WorkshopAdmin(object):
     list_display = ["id", "name", "employee"]
+    ordering = ['id']
 
 
 class TeamGroupWorkshopAdmin(object):
     list_display = ["team", "group", "workshop"]
+    ordering = ['id']
 
 
 class TeamStatMemberAdmin(object):
     list_display = ["team", "stat_id", "morning_shift_id", "middle_shift_id", "night_shift_id", "update_time"]
+    ordering = ['update_time', 'team']
+
 
 
 xadmin.site.register(Member, MemberAdmin)

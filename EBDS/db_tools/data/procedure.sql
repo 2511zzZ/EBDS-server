@@ -202,7 +202,7 @@ BEGIN
 			IF (SELECT RAND() < 0.001) THEN -- 百分之0.1的概率为0
 				SET accuracy = 0;
 			ELSE
-				SET accuracy = FLOOR(70 + (RAND() * (s_accuracy-30+1))); -- 70-s_accuracy
+				SET accuracy = FLOOR(70 + (RAND() * (s_accuracy-70+1))); -- 70-s_accuracy
 			END IF;
 			IF (SELECT RAND() < 0.001) THEN -- 百分之0.1的概率为0
 				SET workhour = 0;
