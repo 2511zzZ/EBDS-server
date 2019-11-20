@@ -71,8 +71,8 @@ def insert_to_dpt(sms_table_name):
     for i in range(len(employee_data)):
         employee_id = employee_data[i][0]
         try:
-            sql = "INSERT INTO {}(employee_id) VALUE(%s)".format(sms_table_name)
-            val = (employee_id, )
+            sql = "INSERT INTO {}(id, name, employee_id) VALUE(%s, %s, %s)".format(sms_table_name)
+            val = (1, "生产部", employee_id, )
             cursor.execute(sql, val)
             db.commit()
         except Exception as e:

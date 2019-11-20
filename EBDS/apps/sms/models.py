@@ -92,6 +92,8 @@ class Dpt(models.Model):
     """
     生产部信息
     """
+    id = models.IntegerField(verbose_name='生产部号')
+    name = models.CharField(verbose_name='生产部名', max_length=255)
     employee = models.ForeignKey(Member, verbose_name='生产部管理员工号',
                                  on_delete=models.CASCADE, db_constraint=False)
 
@@ -101,7 +103,7 @@ class Dpt(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return "生产部"
+        return self.name
 
 
 class TeamGroupWorkshop(models.Model):

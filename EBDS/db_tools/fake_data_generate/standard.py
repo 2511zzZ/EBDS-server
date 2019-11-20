@@ -45,9 +45,9 @@ def insert_standard_dpt(table_name):
 
     # print(team_id, s_efficiency, s_accuracy, s_workhour)
     try:
-        sql = "INSERT INTO {}(s_efficiency, s_accuracy, s_workhour) " \
-              "VALUES(%s, %s, %s);".format(table_name)
-        val = (s_efficiency, s_accuracy, s_workhour)
+        sql = "INSERT INTO {}({}_id, s_efficiency, s_accuracy, s_workhour) " \
+              "VALUES(%s, %s, %s, %s);".format(table_name, table_name.split("_")[-1])
+        val = (1, s_efficiency, s_accuracy, s_workhour)
         cursor.execute(sql, val)
         db.commit()
     except Exception as e:

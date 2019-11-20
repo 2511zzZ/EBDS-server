@@ -1,5 +1,5 @@
 from django.db import models
-from sms.models import Team, Group, Workshop
+from sms.models import Team, Group, Workshop, Dpt
 
 
 class Standard(models.Model):
@@ -66,6 +66,8 @@ class StandardDpt(Standard):
     """
     生产部标准指标
     """
+    dpt = models.OneToOneField(Dpt, verbose_name='生产部号', primary_key=True,
+                               on_delete=models.CASCADE, db_constraint=False)
 
     class Meta:
         db_table = 'standard_dpt'
@@ -73,7 +75,7 @@ class StandardDpt(Standard):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return "生产部"
+        return self.dpt.name
 
 
 class StandardBasicAction(models.Model):
