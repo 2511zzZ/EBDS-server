@@ -21,3 +21,20 @@ class StandardSerializer(serializers.ModelSerializer):
         return fields
 
 
+class AverageSerializer(serializers.ModelSerializer):
+    """
+    Avg 根据metric返回指定字段
+    """
+
+    def get_fields(self):
+        fields = super().get_fields()
+
+        metric = self.context['request'].query_params.get('metric')  # 获取路径参数
+        sms_type = self.context['request'].query_params.get('type')
+
+        if metric and metric in ('efficiency', 'accuracy', 'workhour'):
+            return OrderedDict([(sms_type+"_id", fields[sms_type+"_id"]),
+                                ("a_" + metric, fields["a_" + metric]),
+                                ('time', fields['time'])])
+        return fields
+

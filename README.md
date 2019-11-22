@@ -26,4 +26,6 @@ set password=password('');
 
 5. 运行db_tools下的`fake_data.py`自动生成数据，可根据机器内存自己更改commit的位置，主要是`dms_*.py`数据量大
 
-
+# 对象级权限信息导入
+运行`app.utils`下的`assign_permissions.py`，
+结果体现在`guardian`数据表中

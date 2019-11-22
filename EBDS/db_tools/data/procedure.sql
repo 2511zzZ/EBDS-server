@@ -24,8 +24,8 @@ DROP PROCEDURE IF EXISTS `fake_dms_dpt_avg`;
 delimiter //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `fake_dms_dpt_avg`()
 BEGIN
-	INSERT INTO dms_dpt_avg(a_efficiency, a_accuracy, a_workhour, time)
-	SELECT AVG(efficiency) AS a_efficiency, AVG(accuracy) AS a_accuracy, AVG(workhour) AS a_workhour, MAX(time) AS `time` FROM dms_dpt_online;
+	INSERT INTO dms_dpt_avg(dpt_id, a_efficiency, a_accuracy, a_workhour, time)
+	SELECT 1 AS dpt_id, AVG(efficiency) AS a_efficiency, AVG(accuracy) AS a_accuracy, AVG(workhour) AS a_workhour, MAX(time) AS `time` FROM dms_dpt_online;
 END
 //
 delimiter ;
@@ -37,8 +37,8 @@ DROP PROCEDURE IF EXISTS `fake_dms_dpt_daily`;
 delimiter //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `fake_dms_dpt_daily`()
 BEGIN
-	INSERT INTO dms_dpt_daily(efficiency, accuracy, workhour, time)
-	SELECT AVG(efficiency) AS efficiency, AVG(accuracy) AS accuracy, AVG(workhour) AS workhour, time AS `time` 
+	INSERT INTO dms_dpt_daily(dpt_id, efficiency, accuracy, workhour, time)
+	SELECT 1 AS dpt_id, AVG(efficiency) AS efficiency, AVG(accuracy) AS accuracy, AVG(workhour) AS workhour, time AS `time`
 	FROM dms_workshop_daily GROUP BY time;
 END
 //
@@ -51,8 +51,8 @@ DROP PROCEDURE IF EXISTS `fake_dms_dpt_online`;
 delimiter //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `fake_dms_dpt_online`()
 BEGIN
-	INSERT INTO dms_dpt_online(efficiency, accuracy, workhour, time)
-	SELECT AVG(efficiency) AS efficiency, AVG(accuracy) AS accuracy, AVG(workhour) AS workhour, time AS `time` 
+	INSERT INTO dms_dpt_online(dpt_id, efficiency, accuracy, workhour, time)
+	SELECT 1 AS dpt_id, AVG(efficiency) AS efficiency, AVG(accuracy) AS accuracy, AVG(workhour) AS workhour, time AS `time`
 	FROM dms_workshop_online GROUP BY time;
 END
 //

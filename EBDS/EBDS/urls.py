@@ -25,9 +25,11 @@ from rest_framework_jwt.views import obtain_jwt_token
 from django.urls import path, re_path, include
 
 from standard.router import standard_router
+from dms.router import average_router
 
 route = DefaultRouter()
 route.registry.extend(standard_router.registry)
+route.registry.extend(average_router.registry)
 
 
 urlpatterns = [
