@@ -63,6 +63,7 @@ class DmsDptAvg(AvgModel):
     """
     生产部实时平均工作数据(最近)
     """
+    dpt_id = models.IntegerField(verbose_name='生产部号')
 
     class Meta:
         db_table = 'dms_dpt_avg'

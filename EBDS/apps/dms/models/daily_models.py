@@ -68,6 +68,7 @@ class DmsDptDaily(DailyModel):
     """
     生产部历史工作记录(每日)
     """
+    dpt_id = models.IntegerField(verbose_name='生产部号', db_index=True)
 
     class Meta:
         db_table = 'dms_dpt_daily'

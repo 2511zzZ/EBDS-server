@@ -68,6 +68,7 @@ class DmsDptOnline(OnlineModel):
     """
     生产部实时工作数据(24小时内)
     """
+    dpt_id = models.IntegerField(verbose_name='生产部号', db_index=True)
 
     class Meta:
         db_table = 'dms_dpt_online'
