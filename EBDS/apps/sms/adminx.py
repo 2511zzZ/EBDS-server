@@ -29,7 +29,7 @@ class WorkshopAdmin(object):
 
 class TeamGroupWorkshopAdmin(object):
     list_display = ["team", "group", "workshop"]
-    ordering = ['id']
+    # ordering = ['id']
 
 
 class TeamStatMemberAdmin(object):

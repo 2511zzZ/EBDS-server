@@ -1,3 +1,4 @@
+django-guardian
 Django == 2.1.1
 XlsxWriter == 1.1.8
 django-db-tools == 0.0.1

@@ -24,11 +24,16 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from django.urls import path, re_path, include
 
+from standard.router import standard_router
+
 route = DefaultRouter()
+route.registry.extend(standard_router.registry)
+
 
 urlpatterns = [
-    path('xadmin/', xadmin.site.urls),
     re_path(r"^", include(route.urls)),
+    path('xadmin/', xadmin.site.urls),
+
     path('media/<path:path>', serve, {'document_root': MEDIA_ROOT}),
 
     path("docs/", include_docs_urls("流水线行为检测系统API接口文档")),

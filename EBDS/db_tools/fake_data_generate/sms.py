@@ -64,21 +64,20 @@ def insert_to_dpt(sms_table_name):
     插入生产部信息表
     :return:
     """
-    employee_sql = "SELECT employee_id FROM sms_member WHERE type=4;"
+    employee_sql = "SELECT employee_id FROM sms_member WHERE type=4 ORDER BY employee_id DESC;"
     cursor.execute(employee_sql)
     employee_data = cursor.fetchall()
 
-    for i in range(len(employee_data)):
-        employee_id = employee_data[i][0]
-        try:
-            sql = "INSERT INTO {}(id, name, employee_id) VALUE(%s, %s, %s)".format(sms_table_name)
-            val = (1, "生产部", employee_id, )
-            cursor.execute(sql, val)
-            db.commit()
-        except Exception as e:
-            # 回滚
-            print(e)
-            db.rollback()
+    employee_id = employee_data[0][0]  # 总经理
+    try:
+        sql = "INSERT INTO {}(id, name, employee_id) VALUE(%s, %s, %s)".format(sms_table_name)
+        val = (1, "生产部", employee_id, )
+        cursor.execute(sql, val)
+        db.commit()
+    except Exception as e:
+        # 回滚
+        print(e)
+        db.rollback()
 
 
 def run():

@@ -48,7 +48,7 @@ def run():
     try:
         insert_to_mysql("dms_stat_daily", "2018-10-20", "2019-11-16")
 
-        cursor.callproc('fake_dms_stat_online', ('2019-11-20 00:00:00', 1440))  # 插入全天的数据
+        cursor.callproc('fake_dms_stat_online', ('2019-11-21 00:00:00', 1440))  # 插入全天的数据
         db.commit()
         cursor.callproc('fake_dms_stat_avg')
         db.commit()

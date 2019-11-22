@@ -92,7 +92,7 @@ class Dpt(models.Model):
     """
     生产部信息
     """
-    id = models.IntegerField(verbose_name='生产部号')
+    id = models.IntegerField(verbose_name='生产部号', primary_key=True)
     name = models.CharField(verbose_name='生产部名', max_length=255)
     employee = models.ForeignKey(Member, verbose_name='生产部管理员工号',
                                  on_delete=models.CASCADE, db_constraint=False)
