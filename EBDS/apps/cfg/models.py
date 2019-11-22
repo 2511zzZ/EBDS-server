@@ -1,5 +1,6 @@
 from django.db import models
 from sms.models import Member
+from users.models import User
 
 
 class CfgAlertCondition(models.Model):
@@ -55,8 +56,8 @@ class CfgUserInquiry(models.Model):
     """
     「查询设置」用户配置
     """
-    employee = models.ForeignKey(Member, verbose_name='员工号',
-                                 on_delete=models.CASCADE, db_constraint=False)
+    user = models.ForeignKey(User, verbose_name='员工号',
+                             on_delete=models.CASCADE, db_constraint=False)
     cfg = models.ForeignKey(CfgBaseInquiry, verbose_name='「查询设置」配置号',
                             on_delete=models.CASCADE, db_constraint=False)
     status = models.BooleanField(default=True, verbose_name='配置开/关', blank=True, null=True)
