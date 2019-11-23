@@ -18,12 +18,12 @@ class OnlineFilter(django_filters.rest_framework.FilterSet):
                                            "required": "参数缺失!",
                                        }
                                        )
-    id = django_filters.NumberFilter(method='id_filter', field_name='id',
+    id = django_filters.NumberFilter(method='id_filter', field_name='id', help_text='id',
                                      required=True, error_messages={
                                             "required": "参数缺失!",
                                      }
                                      )
-    metric = django_filters.ChoiceFilter(method='metric_filter', choices=METRIC_CHOICES,
+    metric = django_filters.ChoiceFilter(method='metric_filter', choices=METRIC_CHOICES, help_text='数据类型',
                                          required=True, error_messages={
                                             "required": "参数缺失!",
                                          }

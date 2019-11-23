@@ -19,12 +19,12 @@ class StandardFilter(django_filters.rest_framework.FilterSet):
                                           "required": "参数缺失!",
                                        }
                                        )
-    id = ListFilter(method='id_filter', field_name='id',
+    id = ListFilter(method='id_filter', field_name='id', help_text='id',
                     required=True, error_messages={
                          "required": "参数缺失!",
                     }
                     )
-    metric = django_filters.ChoiceFilter(method='metric_filter', choices=METRIC_CHOICES)
+    metric = django_filters.ChoiceFilter(method='metric_filter', choices=METRIC_CHOICES, help_text='数据类型')
 
     def type_filter(self, queryset, name, value):
         self.Meta.model = globals()["Standard"+value.title()]  # 动态指定model

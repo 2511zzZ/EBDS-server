@@ -17,7 +17,7 @@ class AverageFilter(django_filters.rest_framework.FilterSet):
                                           "required": "参数缺失!",
                                        }
                                        )
-    id = ListFilter(method='id_filter', field_name='id',
+    id = ListFilter(method='id_filter', field_name='id', help_text='id',
                     required=True, error_messages={
                          "required": "参数缺失!",
                     }
