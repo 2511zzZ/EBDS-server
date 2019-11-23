@@ -48,7 +48,7 @@ def insert_to_mysql(table_name, begin_date, end_date):
             workhour = random.randint(5, int(s_workhour))
             time = _date
             try:
-                sql = "INSERT INTO {}(employee_id, efficiency, accuracy, workhour, time) " \
+                sql = "INSERT INTO {}(worker_id, efficiency, accuracy, workhour, time) " \
                       "VALUE(%s, %s, %s, %s, %s)".format(table_name)
                 val = (employee_id, efficiency, accuracy, workhour, time)
                 cursor.execute(sql, val)

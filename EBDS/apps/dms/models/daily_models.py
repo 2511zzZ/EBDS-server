@@ -93,11 +93,12 @@ class DmsWorkerDaily(DailyModel):
     """
     工人历史工作记录(每日)
     """
-    employee_id = models.IntegerField(verbose_name='员工号', db_index=True)
+    # worker_id相当于employee_id(没有变更的情况下)
+    worker_id = models.IntegerField(verbose_name='员工号', db_index=True)
 
     class Meta:
         db_table = 'dms_worker_daily'
-        index_together = ["employee_id", "time"]
+        index_together = ["worker_id", "time"]
         verbose_name = "工人历史工作记录(每日)"
         verbose_name_plural = verbose_name
 
