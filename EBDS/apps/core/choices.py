@@ -15,6 +15,8 @@ AVERAGE_TYPE_CHOICES = (
     ("stat", "工位")
 )
 
+ONLINE_TYPE_CHOICES = AVERAGE_TYPE_CHOICES
+
 METRIC_CHOICES = (
     ("efficiency", "效率"),
     ("accuracy", "准确率"),

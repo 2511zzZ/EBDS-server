@@ -46,7 +46,6 @@ class AverageFilter(django_filters.rest_framework.FilterSet):
         return queryset   # such as s_efficiency
 
     class Meta:
-        # model = Goods
         fields = ['type', 'id', 'metric']
 
 
