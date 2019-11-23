@@ -57,6 +57,10 @@ class OnlineSerializer(serializers.ModelSerializer):
         return fields
 
 
+# Daily 根据metric返回指定字段
+DailySerializer = OnlineSerializer
+
+
 class DmsListSerializer(serializers.ListSerializer):
     """
     重写Online & Daily 数据的序列化格式

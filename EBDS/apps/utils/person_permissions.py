@@ -8,7 +8,7 @@ from dms.models import DmsTeamOnline, DmsGroupOnline, DmsWorkshopOnline, DmsDptO
 
 from sms.models import Team, Group, Workshop, Dpt, TeamStatMember, TeamGroupWorkshop
 
-from core.choices import ONLINE_TYPE_CHOICES
+from core.choices import ONLINE_TYPE_CHOICES, DAILY_TYPE_CHOICES
 
 
 class StandardPermission(permissions.BasePermission):
@@ -70,7 +70,6 @@ class OnlinePermission(permissions.BasePermission):
         role_id = request.user.groups.all()[0].id
         sms_name = request.query_params.get('type')
         sms_id = request.query_params.get('id')
-        print(role_id)
         if sms_name not in [sms_info[0] for sms_info in ONLINE_TYPE_CHOICES]:  # 出现uncleaned数据交给filter来做处理
             return True
         # 先判断总权限
@@ -110,6 +109,89 @@ class OnlinePermission(permissions.BasePermission):
                         for stat_obj in TeamStatMember.objects.filter(team=team_id).order_by('-update_time')[:10]:
                             stat_id = getattr(stat_obj, f"{sms_name}_id")
                             if int(sms_id) == stat_id:
+                                return True
+                    return False  # 没有该对象的权限
+        except Exception:  # 出现uncleaned数据交给filter来做处理
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        # Instance must have an attribute named `owner`.
+        return obj.user == request.user
+
+
+class DailyPermission(permissions.BasePermission):
+    """
+    历史工作数据 对象级权限
+    """
+    def has_permission(self, request, view):
+        # 由于daily表的数据量大，且经常变动，采用逻辑验证而不用对象级权限映射的方式
+        user = request.user
+        role_id = request.user.groups.all()[0].id
+        sms_name = request.query_params.get('type')
+        sms_id = request.query_params.get('id')
+        if sms_name not in [sms_info[0] for sms_info in DAILY_TYPE_CHOICES]:  # 出现uncleaned数据交给filter来做处理
+            return True
+        # 先判断总权限
+        if not user.has_perm(f'dms.view_dms{sms_name}daily'):
+            return False
+        try:
+            # 再根据逻辑判断对象权限
+            if role_id == 4:  # 总经理
+                return True
+            elif role_id == 3:  # 经理
+                _id = Workshop.objects.get(employee=user.employee_id).id  # 获得经理管理车间号
+                if sms_name in ["team", "group", "workshop"]:
+                    for sms_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values(sms_name).distinct():
+                        if int(sms_id) == sms_obj[sms_name]:
+                            return True
+                    return False  # 没有该对象的权限
+                elif sms_name == "stat":
+                    for team_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values('team').distinct():
+                        team_id = team_obj['team']
+                        # 取最近十个(因为存在变更信息)
+                        for stat_obj in TeamStatMember.objects.filter(team=team_id).order_by('-update_time')[:10]:
+                            stat_id = getattr(stat_obj, f"{sms_name}_id")
+                            if int(sms_id) == stat_id:
+                                return True
+                    return False  # 没有该对象的权限
+                elif sms_name == "worker":
+                    for team_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values('team').distinct():
+                        team_id = team_obj['team']
+                        # 取最近十个(因为存在变更信息)
+                        for worker_obj in TeamStatMember.objects.filter(team=team_id).order_by('-update_time')[:10]:
+                            worker_ids = (getattr(worker_obj, "morning_shift_id"),
+                                          getattr(worker_obj, "middle_shift_id"),
+                                          getattr(worker_obj, "night_shift_id")
+                                          )
+                            if int(sms_id) in worker_ids:
+                                return True
+                    return False  # 没有该对象的权限
+            elif role_id == 2:  # 大组长
+                _id = Group.objects.get(employee=user.employee_id).id  # 获得大组长管理大组号
+                if sms_name in ["team", "group"]:
+                    for sms_obj in TeamGroupWorkshop.objects.filter(group=_id).values(sms_name).distinct():
+                        if int(sms_id) == sms_obj[sms_name]:
+                            return True
+                    return False  # 没有该对象的权限
+                elif sms_name == "stat":
+                    for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
+                        team_id = team_obj['team']
+                        # 取最近十个(因为存在变更信息)
+                        for stat_obj in TeamStatMember.objects.filter(team=team_id).order_by('-update_time')[:10]:
+                            stat_id = getattr(stat_obj, f"{sms_name}_id")
+                            if int(sms_id) == stat_id:
+                                return True
+                    return False  # 没有该对象的权限
+                elif sms_name == "worker":
+                    for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
+                        team_id = team_obj['team']
+                        # 取最近十个(因为存在变更信息)
+                        for worker_obj in TeamStatMember.objects.filter(team=team_id).order_by('-update_time')[:10]:
+                            worker_ids = (getattr(worker_obj, "morining_shift_id"),
+                                          getattr(worker_obj, "middle_shift_id"),
+                                          getattr(worker_obj, "night_shift_id")
+                                          )
+                            if int(sms_id) in worker_ids:
                                 return True
                     return False  # 没有该对象的权限
         except Exception:  # 出现uncleaned数据交给filter来做处理

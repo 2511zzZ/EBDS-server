@@ -3,41 +3,48 @@ import django_filters
 from datetime import datetime, timedelta
 from rest_framework.exceptions import ValidationError
 
-from ..models import DmsTeamOnline, DmsGroupOnline, DmsWorkshopOnline, DmsDptOnline, DmsStatOnline
-from core.choices import ONLINE_TYPE_CHOICES, METRIC_CHOICES
+from ..models import DmsTeamDaily, DmsGroupDaily, DmsWorkshopDaily, DmsDptDaily, \
+    DmsStatDaily, DmsWorkerDaily
+from core.choices import DAILY_TYPE_CHOICES, METRIC_CHOICES
 from utils.person_filter import ListFilter
 
 
-class OnlineFilter(django_filters.rest_framework.FilterSet):
+class DailyFilter(django_filters.rest_framework.FilterSet):
     """
-    所有实时工作数据的通用过滤类
+    所有历史工作数据的通用过滤类
     """
     type = django_filters.ChoiceFilter(method='type_filter', field_name='type',
-                                       help_text='标准类型', choices=ONLINE_TYPE_CHOICES, required=True,
+                                       help_text='标准类型', choices=DAILY_TYPE_CHOICES, required=True,
                                        error_messages={
                                            "required": "参数缺失!",
                                        }
                                        )
     id = django_filters.NumberFilter(method='id_filter', field_name='id', help_text='id',
                                      required=True, error_messages={
-                                            "required": "参数缺失!",
+                                         "required": "参数缺失!",
                                      }
                                      )
     metric = django_filters.ChoiceFilter(method='metric_filter', choices=METRIC_CHOICES, help_text='数据类型',
                                          required=True, error_messages={
-                                            "required": "参数缺失!",
+                                             "required": "参数缺失!",
                                          }
                                          )
+    start = django_filters.DateFilter(field_name='time', lookup_expr='gte', required=True, help_text='开始时间',
+                                      error_messages={
+                                             "required": "参数缺失!",
+                                         })
+
+    end = django_filters.DateFilter(field_name='time', lookup_expr='lte', required=True, help_text='结束时间',
+                                    error_messages={
+                                             "required": "参数缺失!",
+                                         })
 
     def type_filter(self, queryset, name, value):
-        self.Meta.model = globals()[f"Dms{value.title()}Online"]  # 动态指定model
+        self.Meta.model = globals()[f"Dms{value.title()}Daily"]  # 动态指定model
         return queryset
 
     def id_filter(self, queryset, name, value):
         sms_type = self.request.query_params["type"]
-        # 先过滤出实时数据(24小时内)
-        one_day_ago = datetime.now() - timedelta(hours=48, minutes=0, seconds=0)
-        queryset = queryset.filter(time__gte=one_day_ago)
         if sms_type == "dpt":
             return queryset
         return queryset.filter(**{f'{sms_type}_id': value})
@@ -47,6 +54,7 @@ class OnlineFilter(django_filters.rest_framework.FilterSet):
         return queryset  # such as s_efficiency
 
     class Meta:
-        fields = ['type', 'id', 'metric']
+        fields = ['type', 'id', 'metric', 'start', 'end']
+
 
 

@@ -15,9 +15,15 @@ from .models import DmsTeamOnline, DmsGroupOnline, DmsWorkshopOnline, DmsDptOnli
 from .serializers import DmsTeamOnlineSerializer, DmsGroupOnlineSerializer, DmsWorkshopOnlineSerializer, \
     DmsDptOnlineSerializer, DmsStatOnlineSerializer
 
+from .models import DmsTeamDaily, DmsGroupDaily, DmsWorkshopDaily, DmsDptDaily, \
+    DmsStatDaily, DmsWorkerDaily
+from .serializers import DmsTeamDailySerializer, DmsGroupDailySerializer, DmsWorkshopDailySerializer,\
+    DmsDptDailySerializer, DmsStatDailySerializer, DmsWorkerDailySerializer
+
 from .filters.avg_filters import AverageFilter
 from .filters.online_filters import OnlineFilter
-from utils.person_permissions import AveragePermission, OnlinePermission
+from .filters.daily_filters import DailyFilter
+from utils.person_permissions import AveragePermission, OnlinePermission, DailyPermission
 
 
 class AverageViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -49,7 +55,7 @@ class OnlineViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     实时工作数据
     """
-    serializer_class = DmsTeamOnline
+    serializer_class = DmsTeamOnlineSerializer
     queryset = DmsTeamOnline.objects.all()
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     filter_backends = (DjangoFilterBackend,)
@@ -69,6 +75,30 @@ class OnlineViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
         except (KeyError, AttributeError):  # 出现uncleaned数据交给filter来做处理
             return self.queryset
 
+
+class DailyViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    历史工作数据
+    """
+    serializer_class = DmsTeamDailySerializer
+    queryset = DmsTeamDaily.objects.all()
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAuthenticated, DailyPermission)
+    filter_class = DailyFilter
+
+    def get_serializer_class(self):
+        try:
+            return globals()[f"Dms{self.request.query_params.get('type').title()}DailySerializer"]
+        except (KeyError, AttributeError):  # 出现uncleaned数据交给filter来做处理
+            return self.serializer_class
+
+    def get_queryset(self):
+        try:
+            model_name = globals()[f"Dms{self.request.query_params.get('type').title()}Daily"]
+            return model_name.objects.all()
+        except (KeyError, AttributeError):  # 出现uncleaned数据交给filter来做处理
+            return self.queryset
 
 
 
