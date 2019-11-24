@@ -1,6 +1,7 @@
 from django.db import models
 from sms.models import Member
 from users.models import User
+from core.choices import DAY_PERIOD_CHOICES
 
 
 class CfgAlertCondition(models.Model):
@@ -76,12 +77,7 @@ class CfgWorkPeriod(models.Model):
     """
     工作时间段
     """
-    TIME_CHOICES = (
-        ("morning", "早"),
-        ("middle", "中"),
-        ("night", "晚")
-    )
-    name = models.CharField(max_length=255, verbose_name='时间段', blank=True, null=True, choices=TIME_CHOICES)
+    name = models.CharField(max_length=255, verbose_name='时间段', blank=True, null=True, choices=DAY_PERIOD_CHOICES)
     start_time = models.TimeField(verbose_name='开始时间', blank=True, null=True)
     end_time = models.TimeField(verbose_name='结束时间', blank=True, null=True)
 

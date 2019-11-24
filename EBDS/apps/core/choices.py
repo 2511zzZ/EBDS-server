@@ -1,5 +1,11 @@
 # coding: utf-8
 
+DAY_PERIOD_CHOICES = (
+    ("morning", "早"),
+    ("middle", "中"),
+    ("night", "晚")
+)
+
 STANDARD_TYPE_CHOICES = (
         ("team", "小组"),
         ("group", "大组"),
