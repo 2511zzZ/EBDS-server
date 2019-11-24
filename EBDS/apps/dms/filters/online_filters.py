@@ -36,7 +36,7 @@ class OnlineFilter(django_filters.rest_framework.FilterSet):
     def id_filter(self, queryset, name, value):
         sms_type = self.request.query_params["type"]
         # 先过滤出实时数据(24小时内)
-        one_day_ago = datetime.now() - timedelta(hours=48, minutes=0, seconds=0)
+        one_day_ago = datetime.now() - timedelta(hours=72, minutes=0, seconds=0)
         queryset = queryset.filter(time__gte=one_day_ago)
         if sms_type == "dpt":
             return queryset
