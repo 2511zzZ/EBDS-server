@@ -13,13 +13,12 @@ class StandardFilter(django_filters.rest_framework.FilterSet):
     """
     所有标准的通用过滤类
     """
-    type = django_filters.ChoiceFilter(method='type_filter', field_name='type',
-                                       help_text='标准类型', choices=STANDARD_TYPE_CHOICES, required=True,
+    type = django_filters.ChoiceFilter(method='type_filter', help_text='标准类型', choices=STANDARD_TYPE_CHOICES, required=True,
                                        error_messages={
                                           "required": "参数缺失!",
                                        }
                                        )
-    id = ListFilter(method='id_filter', field_name='id', help_text='id',
+    id = ListFilter(method='id_filter', help_text='id',
                     required=True, error_messages={
                          "required": "参数缺失!",
                     }
