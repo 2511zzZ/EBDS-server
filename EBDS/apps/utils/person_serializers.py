@@ -10,7 +10,7 @@ class StandardSerializer(serializers.ModelSerializer):
     """
     Standard 根据metric返回指定字段
     """
-
+    # https://www.django-rest-framework.org/api-guide/serializers/#customizing-the-default-fields
     def get_fields(self):
         fields = super().get_fields()
         pk_name = self.Meta.model._meta.pk.name
