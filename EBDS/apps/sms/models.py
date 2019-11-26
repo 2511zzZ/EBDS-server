@@ -8,6 +8,7 @@ class Member(models.Model):
     公司成员
     """
     TYPE_CHOICES = (
+        (0, "离职"),
         (1, "工人"),
         (2, "大组长"),
         (3, "经理"),
