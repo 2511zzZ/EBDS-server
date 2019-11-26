@@ -1,5 +1,18 @@
 # coding: utf-8
 
+EMPLOYEE_TYPE_CHOICES = (
+    (0, "离职"),
+    (1, "工人"),
+    (2, "大组长"),
+    (3, "经理"),
+    (4, "总经理")
+)
+
+SEX_CHOICES = (
+    ("male", "男"),
+    ("female", "女")
+)
+
 DAY_PERIOD_CHOICES = (
     ("morning", "早"),
     ("middle", "中"),

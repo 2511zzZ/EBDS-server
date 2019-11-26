@@ -10,6 +10,7 @@ from dms.models import DmsTeamOnline, DmsGroupOnline, DmsWorkshopOnline, DmsDptO
 from sms.models import Team, Group, Workshop, Dpt, TeamStatMember, TeamGroupWorkshop
 
 from core.choices import ONLINE_TYPE_CHOICES, DAILY_TYPE_CHOICES
+from utils.static_methods import get_recent_stat_obj
 
 
 class StandardPermission(permissions.BasePermission):
@@ -65,19 +66,6 @@ class OnlinePermission(permissions.BasePermission):
     """
     实时工作数据 对象级权限
     """
-    @staticmethod
-    def get_recent_stat_obj(team_id):
-        """
-        根据小组号获取小组对应的最新十个工位信息
-        :return:
-        """
-        for stat_obj in TeamStatMember.objects.filter(
-                                                id__in=
-                                                TeamStatMember.objects.values('stat_id').
-                                                annotate(default_id=Max('id')).
-                                                values('default_id')
-                                                ).filter(team=team_id):
-            yield stat_obj
 
     def has_permission(self, request, view):
         # 由于online表的数据量大，且经常变动，采用逻辑验证而不用对象级权限映射的方式
@@ -105,7 +93,7 @@ class OnlinePermission(permissions.BasePermission):
                     for team_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values('team').distinct():
                         team_id = team_obj['team']
                         # 取小组对应的最新十个工位信息
-                        for stat_obj in self.get_recent_stat_obj(team_id):
+                        for stat_obj in get_recent_stat_obj(team_id):
                             stat_id = getattr(stat_obj, f"{sms_name}_id")
                             if int(sms_id) == stat_id:
                                 return True
@@ -121,7 +109,7 @@ class OnlinePermission(permissions.BasePermission):
                     for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
                         team_id = team_obj['team']
                         # 取小组对应的最新十个工位信息
-                        for stat_obj in self.get_recent_stat_obj(team_id):
+                        for stat_obj in get_recent_stat_obj(team_id):
                             stat_id = getattr(stat_obj, f"{sms_name}_id")
                             if int(sms_id) == stat_id:
                                 return True
@@ -138,19 +126,6 @@ class DailyPermission(permissions.BasePermission):
     """
     历史工作数据 对象级权限
     """
-    @staticmethod
-    def get_recent_stat_obj(team_id):
-        """
-        根据小组号获取小组对应的最新十个工位信息
-        :return:
-        """
-        for stat_obj in TeamStatMember.objects.filter(
-                                                id__in=
-                                                TeamStatMember.objects.values('stat_id').
-                                                annotate(default_id=Max('id')).
-                                                values('default_id')
-                                                ).filter(team=team_id):
-            yield stat_obj
 
     def has_permission(self, request, view):
         # 由于daily表的数据量大，且经常变动，采用逻辑验证而不用对象级权限映射的方式
@@ -178,7 +153,7 @@ class DailyPermission(permissions.BasePermission):
                     for team_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values('team').distinct():
                         team_id = team_obj['team']
                         # 取小组对应的最新十个工位信息
-                        for stat_obj in self.get_recent_stat_obj(team_id):
+                        for stat_obj in get_recent_stat_obj(team_id):
                             stat_id = getattr(stat_obj, f"{sms_name}_id")
                             if int(sms_id) == stat_id:
                                 return True
@@ -187,7 +162,7 @@ class DailyPermission(permissions.BasePermission):
                     for team_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values('team').distinct():
                         team_id = team_obj['team']
                         # 取小组对应的最新十个工位信息
-                        for worker_obj in self.get_recent_stat_obj(team_id):
+                        for worker_obj in get_recent_stat_obj(team_id):
                             worker_ids = (getattr(worker_obj, "morning_shift_id"),
                                           getattr(worker_obj, "middle_shift_id"),
                                           getattr(worker_obj, "night_shift_id")
@@ -206,7 +181,7 @@ class DailyPermission(permissions.BasePermission):
                     for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
                         team_id = team_obj['team']
                         # 取小组对应的最新十个工位信息
-                        for stat_obj in self.get_recent_stat_obj(team_id):
+                        for stat_obj in get_recent_stat_obj(team_id):
                             stat_id = getattr(stat_obj, f"{sms_name}_id")
                             if int(sms_id) == stat_id:
                                 return True
@@ -215,7 +190,7 @@ class DailyPermission(permissions.BasePermission):
                     for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
                         team_id = team_obj['team']
                         # 取小组对应的最新十个工位信息
-                        for worker_obj in self.get_recent_stat_obj(team_id):
+                        for worker_obj in get_recent_stat_obj(team_id):
                             worker_ids = (getattr(worker_obj, "morining_shift_id"),
                                           getattr(worker_obj, "middle_shift_id"),
                                           getattr(worker_obj, "night_shift_id")

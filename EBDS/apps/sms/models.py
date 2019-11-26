@@ -1,30 +1,19 @@
 from datetime import datetime
 
 from django.db import models
+from core.choices import SEX_CHOICES, EMPLOYEE_TYPE_CHOICES
 
 
 class Member(models.Model):
     """
     公司成员
     """
-    TYPE_CHOICES = (
-        (0, "离职"),
-        (1, "工人"),
-        (2, "大组长"),
-        (3, "经理"),
-        (4, "总经理")
-    )
-    SEX_CHOICES = (
-        ("male", "男"),
-        ("female", "女")
-    )
-
     employee_id = models.AutoField(verbose_name='员工号', primary_key=True)
     name = models.CharField(verbose_name='姓名', max_length=255, blank=True, null=True)
     sex = models.CharField(verbose_name='性别', max_length=255, blank=True, null=True, choices=SEX_CHOICES)
     birthday = models.DateField(verbose_name='出生日期', blank=True, null=True)
     birthplace = models.CharField(verbose_name='所在地', max_length=255, blank=True, null=True)
-    type = models.IntegerField(verbose_name='员工类别', blank=True, null=True, choices=TYPE_CHOICES)
+    type = models.IntegerField(verbose_name='员工类别', blank=True, null=True, choices=EMPLOYEE_TYPE_CHOICES)
 
     class Meta:
         db_table = 'sms_member'

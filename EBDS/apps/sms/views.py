@@ -13,11 +13,12 @@ from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import TeamGroupWorkshop, TeamStatMember, Group, Workshop
-from .serializers import TeamSerializer, GroupSerializer, WorkshopSerializer, StatSerializer
-from .filters import TeamFilter, GroupFilter, WorkshopFilter, StatFilter
+from .models import TeamGroupWorkshop, TeamStatMember, Group, Workshop, Member
+from .serializers import TeamSerializer, GroupSerializer, WorkshopSerializer, StatSerializer, WorkerSerializer
+from .filters import TeamFilter, GroupFilter, WorkshopFilter, StatFilter, WorkerFilter
 from core.pagination import StandardResultsSetPagination
 from utils.person_filter import TeamGroupWorkshopFilterBackend
+from utils.static_methods import get_recent_stat_obj
 
 
 class TeamViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -120,8 +121,46 @@ class StatViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
                                         ).filter(team__in=team_id_objs)
 
 
+class WorkerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    工人查询
+    """
+    queryset = Member.objects.filter(type=1)
+    serializer_class = WorkerSerializer
+    pagination_class = StandardResultsSetPagination
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    permission_classes = (IsAuthenticated,)
+    filter_class = WorkerFilter
+    ordering_fields = ('employee_id',)
+    ordering = ('employee_id',)
 
-
-
-
+    def get_queryset(self):
+        user = self.request.user
+        role_id = user.groups.all()[0].id
+        if role_id == 4:
+            return self.queryset
+        elif role_id == 3:  # 经理
+            # 获取对应人员管理的type=1员工
+            _id = Workshop.objects.get(employee=user.employee_id).id  # 获得经理管理车间号
+            worker_ids = []  # 所管理的所有员工id
+            for team_obj in TeamGroupWorkshop.objects.filter(workshop=_id).values('team').distinct():
+                team_id = team_obj['team']
+                # 取小组对应的最新十个工位信息
+                for worker_obj in get_recent_stat_obj(team_id):
+                    worker_ids.append(getattr(worker_obj, "morning_shift_id"))
+                    worker_ids.append(getattr(worker_obj, "middle_shift_id"))
+                    worker_ids.append(getattr(worker_obj, "night_shift_id"))
+            return self.queryset.filter(employee_id__in=worker_ids)
+        elif role_id == 2:  # 大组长
+            _id = Group.objects.get(employee=user.employee_id).id  # 获得大组长管理大组号
+            worker_ids = []  # 所管理的所有员工id
+            for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
+                team_id = team_obj['team']
+                # 取小组对应的最新十个工位信息
+                for worker_obj in get_recent_stat_obj(team_id):
+                    worker_ids.append(getattr(worker_obj, "morning_shift_id"))
+                    worker_ids.append(getattr(worker_obj, "middle_shift_id"))
+                    worker_ids.append(getattr(worker_obj, "night_shift_id"))
+            return self.queryset.filter(employee_id__in=worker_ids)
 

@@ -1,7 +1,8 @@
 # coding: utf-8
-
+from django.db.models import Q
 from .models import Member, Team, Group, Workshop, TeamStatMember, TeamGroupWorkshop
 from rest_framework import serializers
+from utils.static_methods import get_recent_employee_stat_obj
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -59,3 +60,28 @@ class StatSerializer(serializers.ModelSerializer):
 
     def get_night_shift_name(self, obj):
         return Member.objects.get(employee_id=obj.night_shift_id).name
+
+
+class WorkerSerializer(serializers.ModelSerializer):
+    employee = serializers.ReadOnlyField(source='employee_id')
+    stat = serializers.SerializerMethodField()
+    team = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Member
+        fields = ('employee', 'name', 'sex', 'birthplace', 'stat', 'team')
+
+    def get_stat(self, obj):
+        """所属工位号"""
+        employee_id = obj.employee_id
+        # 返回员工目前所在的工位
+        stat_obj = get_recent_employee_stat_obj(employee_id)
+        return stat_obj.stat_id
+
+    def get_team(self, obj):
+        """所属小组号"""
+        employee_id = obj.employee_id
+        # 返回员工目前所在的工位
+        stat_obj = get_recent_employee_stat_obj(employee_id)
+        return stat_obj.team_id
+

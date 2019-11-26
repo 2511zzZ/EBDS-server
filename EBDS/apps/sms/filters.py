@@ -1,9 +1,10 @@
 # coding: utf-8
 
 import django_filters
-from django.db.models import Q
+from django.db.models import Q, Max
 
 from .models import TeamGroupWorkshop, TeamStatMember, Member
+from core.choices import SEX_CHOICES
 
 
 class TeamFilter(django_filters.rest_framework.FilterSet):
@@ -90,3 +91,44 @@ class StatFilter(django_filters.rest_framework.FilterSet):
         model = TeamStatMember
         fields = ['stat', 'morning_shift_id', 'middle_shift_id',
                   'night_shift_id', 'team', 'team_name', 'shift_name']
+
+
+class WorkerFilter(django_filters.rest_framework.FilterSet):
+    employee = django_filters.NumberFilter(field_name='employee_id',
+                                           help_text='员工号', lookup_expr='exact')
+
+    name = django_filters.CharFilter(field_name='name',
+                                     help_text='员工姓名', lookup_expr='icontains')
+
+    sex = django_filters.ChoiceFilter(choices=SEX_CHOICES, help_text='性别')
+
+    birthplace = django_filters.CharFilter(field_name='birthplace',
+                                           help_text='出生地', lookup_expr='icontains')
+
+    stat = django_filters.NumberFilter(method='stat_filter', help_text='所属工位号')
+
+    team = django_filters.NumberFilter(method='team_filter', help_text='所属小组号')
+
+    def stat_filter(self, queryset, name, value):
+        """根据工位号过滤员工"""
+        stat_obj = TeamStatMember.objects.filter(stat_id=value).order_by('-update_time')[0]
+        return queryset.filter(employee_id__in=[stat_obj.morning_shift_id,
+                                                stat_obj.middle_shift_id,
+                                                stat_obj.night_shift_id])
+
+    def team_filter(self, queryset, name, value):
+        """根据小组号过滤员工"""
+        employee_ids = TeamStatMember.objects.filter(
+            id__in=
+            TeamStatMember.objects.values('stat_id').
+            annotate(default_id=Max('id')).
+            values('default_id')
+        ).filter(team=value).values('morning_shift_id', 'middle_shift_id', 'night_shift_id')
+        return queryset.filter(employee_id__in=[employee_id
+                                                for employee_obj in employee_ids
+                                                for employee_id in employee_obj.values()
+                                                ])
+
+    class Meta:
+        model = Member
+        fields = ['employee', 'name', 'sex', 'birthplace', 'stat', 'team']
