@@ -35,3 +35,27 @@ class WorkshopSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamGroupWorkshop
         fields = ('workshop', 'workshop_name', 'workshop_manager', 'workshop_manager_name')
+
+
+class StatSerializer(serializers.ModelSerializer):
+    stat = serializers.ReadOnlyField(source='stat_id')
+    team_name = serializers.ReadOnlyField(source='team.name')
+    morning_shift_name = serializers.SerializerMethodField()
+    middle_shift_name = serializers.SerializerMethodField()
+    night_shift_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TeamStatMember
+        fields = ('stat', 'morning_shift_id', 'morning_shift_name',
+                  'middle_shift_id', 'middle_shift_name',
+                  'night_shift_id', 'night_shift_name',
+                  'team', 'team_name')
+
+    def get_morning_shift_name(self, obj):
+        return Member.objects.get(employee_id=obj.morning_shift_id).name
+
+    def get_middle_shift_name(self, obj):
+        return Member.objects.get(employee_id=obj.middle_shift_id).name
+
+    def get_night_shift_name(self, obj):
+        return Member.objects.get(employee_id=obj.night_shift_id).name

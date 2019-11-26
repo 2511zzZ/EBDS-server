@@ -91,6 +91,7 @@ def assign_average_perm():
                 for team_obj in TeamGroupWorkshop.objects.filter(group=_id).values('team').distinct():
                     team_id = team_obj['team']
                     # 取最近十个(因为存在变更信息)
+                    # TODO: 这里存在逻辑上的bug，最近十个并不是最新的工位信息(而应该取每个工位最近的一条记录)
                     for stat_obj in TeamStatMember.objects.filter(team=team_id).order_by('-update_time')[:10]:
                         stat_id = getattr(stat_obj, f"{sms_name}_id")
                         average = globals()[f'Dms{sms_name.title()}Avg'].objects.get(**{sms_name + "_id": stat_id})
