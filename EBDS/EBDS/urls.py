@@ -27,11 +27,13 @@ from django.urls import path, re_path, include
 from standard.router import standard_router
 from dms.router import dms_router
 from sms.router import sms_router
+from users.router import user_router
 
 route = DefaultRouter()
 route.registry.extend(standard_router.registry)
 route.registry.extend(dms_router.registry)
 route.registry.extend(sms_router.registry)
+route.registry.extend(user_router.registry)
 
 
 urlpatterns = [
