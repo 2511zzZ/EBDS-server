@@ -18,8 +18,8 @@ class CfgBaseInquiryAdmin(object):
 
 
 class CfgUserInquiryAdmin(object):
-    list_display = ['employee', 'cfg', 'status', 'value']
-    search_fields = ['employee']
+    list_display = ['user', 'cfg', 'status', 'value']
+    search_fields = ['user']
     list_filter = list_display
 
 
