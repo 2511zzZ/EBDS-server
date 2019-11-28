@@ -1,6 +1,6 @@
 # coding: utf-8
 import random
-from EBDS.db_tools.fake_data_generate.tools import get_db_connector
+from EBDS.db_tools.tools.tools import get_db_connector
 
 # 打开数据库连接
 db = get_db_connector()

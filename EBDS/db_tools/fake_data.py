@@ -2,7 +2,7 @@
 """数据库数据生成"""
 import os
 import sys
-from EBDS.db_tools.fake_data_generate.tools import exec_sql_file
+from EBDS.db_tools.tools.tools import exec_sql_file
 
 BASE_DIR = 'fake_data_generate'
 # 定义插入顺序
