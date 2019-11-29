@@ -39,9 +39,7 @@ route.registry.extend(user_router.registry)
 urlpatterns = [
     re_path(r"^", include(route.urls)),
     path('xadmin/', xadmin.site.urls),
-
     path('media/<path:path>', serve, {'document_root': MEDIA_ROOT}),
-
     path("docs/", include_docs_urls("流水线行为检测系统API接口文档")),
     re_path(r"^api_auth", include("rest_framework.urls")),
     # jwt的认证接口

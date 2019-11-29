@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'cfg.apps.CfgConfig',
     'dms.apps.DmsConfig',
     'standard.apps.StandardConfig',
+    'django_cleanup',  # 自动删除旧的FileField，ImageField
 ]
 
 MIDDLEWARE = [
@@ -149,6 +150,7 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MAX_FILE_SIZE = 2097152  # 限制最大上传文件2MB
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
