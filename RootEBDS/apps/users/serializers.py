@@ -67,4 +67,10 @@ class AvatarSerializer(serializers.Serializer):
                 'img_url': self.context['request']._current_scheme_host + file_handle.url(img_name)}
 
 
-
+class ChangeUserPasswdSerializer(serializers.Serializer):
+    """
+    更改用户密码序列化类
+    """
+    old_password = serializers.CharField(required=True, write_only=True, min_length=6, max_length=20)
+    new_password = serializers.CharField(style={'input_type': 'password'},
+                                         required=True, write_only=True, min_length=8, max_length=20)

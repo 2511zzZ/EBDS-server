@@ -1,12 +1,5 @@
 # coding: utf-8
 from rest_framework.routers import Route, DynamicRoute, SimpleRouter, DefaultRouter
-from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework.routers import APIRootView, SchemaView, SchemaGenerator, api_settings, OrderedDict
-from django.urls import include, re_path
-
-
-def url(regex, view, kwargs=None, name=None):
-    return re_path(regex, view, kwargs, name)
 
 
 class NoLookupUpdateRouter(SimpleRouter):
