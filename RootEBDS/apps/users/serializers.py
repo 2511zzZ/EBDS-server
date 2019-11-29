@@ -21,6 +21,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'employee', 'real_name', 'nickname', 'sex',
                   'birthday', 'birthplace', 'role', 'level', 'level_id', 'icon')
+        # 只允许更新nickname和icon
+        read_only_fields = ['username', 'employee', 'real_name', 'sex',
+                            'birthday', 'birthplace', 'role', 'level', 'level_id']
 
     def get_role(self, obj):
         if obj.is_superuser:

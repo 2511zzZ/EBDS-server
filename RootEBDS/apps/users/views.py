@@ -13,9 +13,9 @@ from .serializers import UserDetailSerializer, AvatarSerializer
 User = get_user_model()
 
 
-class UserDetailViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+class UserDetailViewset(mixins.ListModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
-    登录用户信息
+    登录用户信息(list/update)
     """
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
