@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from sms.models import Member
+from core.validater import validate_image
 
 
 class User(AbstractUser):
@@ -14,7 +15,8 @@ class User(AbstractUser):
                                  on_delete=models.CASCADE, db_constraint=False)
     nickname = models.CharField(max_length=64, verbose_name="昵称", null=True)
     icon = models.ImageField(max_length=500, verbose_name='头像', upload_to="head_photo/",
-                             default="head_photo/default.jpg", blank=True, null=True)
+                             default="head_photo/default.jpg", blank=True, null=True,
+                             validators=[validate_image])
 
     class Meta:
         db_table = 'auth_user'
