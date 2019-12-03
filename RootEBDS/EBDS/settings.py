@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'cfg.apps.CfgConfig',
     'dms.apps.DmsConfig',
     'standard.apps.StandardConfig',
+    'djcelery',
+    'extra_tasks.apps.ExtraTasksConfig',
     'django_cleanup',  # 自动删除旧的FileField，ImageField
 ]
 
@@ -173,3 +175,8 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
+
+import djcelery
+djcelery.setup_loader()
+CELERY_TIMEZONE = TIME_ZONE
+
