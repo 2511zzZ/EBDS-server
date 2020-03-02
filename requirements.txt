@@ -1,7 +1,7 @@
 PyPDF2
 reportlab
 django-guardian
-Django == 2.1.10
+Django == 2.2.10
 XlsxWriter == 1.1.8
 django-db-tools == 0.0.1
 django-reversion == 3.0.4
