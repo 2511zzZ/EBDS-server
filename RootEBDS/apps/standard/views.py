@@ -38,6 +38,9 @@ class StandardViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         try:
+            # 工位和工人的标准和所属的小组相同
+            if self.request.query_params.get('type') in ('stat', 'worker'):
+                return self.queryset
             model_name = globals()["Standard" + self.request.query_params.get('type').title()]
             return model_name.objects.all()
         except (KeyError, AttributeError):  # 出现uncleaned数据交给filter来做处理

@@ -53,7 +53,7 @@ def insert_avg_data(jsondata_list, level):
         for index, json_data in enumerate(jsondata_list):
             for key in ['efficiency', 'accuracy', 'workhour']:
 
-                json_data[key] = new_avg_data[index+1][key]
+                json_data[key] = new_avg_data[index][key]
         return "update", jsondata_list
 
     sql = "SELECT count(*) FROM dms_{}_online \

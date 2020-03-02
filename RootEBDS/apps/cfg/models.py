@@ -42,6 +42,9 @@ class CfgBaseInquiry(models.Model):
     """
     id = models.IntegerField(verbose_name='配置号', primary_key=True)
     name = models.CharField(verbose_name='配置名', max_length=255, blank=True, null=True)
+    mode = models.PositiveSmallIntegerField(verbose_name='使用方式',
+                                            help_text=r'如果为1，表示仅使用value, 如果为2表示仅使用status, '
+                                                      '如果为3, 表示使用value和status', default=1)
     description = models.CharField(verbose_name='详细描述', max_length=500, blank=True, null=True)
 
     class Meta:

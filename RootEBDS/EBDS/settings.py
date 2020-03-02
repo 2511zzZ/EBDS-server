@@ -52,9 +52,11 @@ INSTALLED_APPS = [
     'ams.apps.AmsConfig',
     'cfg.apps.CfgConfig',
     'dms.apps.DmsConfig',
+    'form_export.apps.FormExportConfig',
     'standard.apps.StandardConfig',
-    'djcelery',
     'extra_tasks.apps.ExtraTasksConfig',
+    'channels',
+    'djcelery',
     'django_cleanup',  # 自动删除旧的FileField，ImageField
 ]
 
@@ -89,6 +91,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'EBDS.wsgi.application'
+ASGI_APPLICATION = 'EBDS.routing.application'
 
 
 # Database
@@ -171,12 +174,28 @@ REST_FRAMEWORK = {
 }
 
 import datetime
+# 7天内有活动，就可以不用重新登录，最长一年都不用重新登录
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_AUTH_COOKIE': 'JWT',     # the cookie will also be sent on WebSocket connections
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
 }
 
 import djcelery
 djcelery.setup_loader()
 CELERY_TIMEZONE = TIME_ZONE
 
+# redis 设置
+REDIS_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379')
+
+# django-channels配置
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
+FORM_FILE_PATH = os.path.join(os.path.abspath("."), "media", "form_file")

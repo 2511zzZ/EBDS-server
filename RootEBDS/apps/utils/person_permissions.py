@@ -10,7 +10,7 @@ from dms.models import DmsTeamOnline, DmsGroupOnline, DmsWorkshopOnline, DmsDptO
 from sms.models import Team, Group, Workshop, Dpt, TeamStatMember, TeamGroupWorkshop
 
 from core.choices import ONLINE_TYPE_CHOICES, DAILY_TYPE_CHOICES
-from utils.static_methods import get_recent_stat_obj
+from utils.static_methods import get_recent_stat_obj, get_all_worker_id
 
 
 class StandardPermission(permissions.BasePermission):
@@ -204,3 +204,101 @@ class DailyPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Instance must have an attribute named `owner`.
         return obj.user == request.user
+
+
+class ReportExportPermission(permissions.BasePermission):
+
+    # 根据用户的信息和提供的Post参数来验证是否有权限
+    def has_permission(self, request, view):
+        role_id = request.user.groups.all()[0].id  # role_id只可能为4, 3, 2
+        if role_id == 4:  # 总经理
+            return True
+
+        try:
+            _type = request.data["type"]
+            if _type == "alert":  # 只有总经理可以导出警报排名
+                return False
+            all_id = request.data["all_id"].split(',')  # type: str
+            if role_id == 3:  # 经理(不能导出dpt)
+                return self.has_level_permission(request.user, _type, all_id, ["dpt"])
+            elif role_id == 2:  # 大组长(不能导出dpt, workshop)
+                return self.has_level_permission(request.user, _type, all_id, ["dpt", "workshop"])
+        except Exception:
+            return True
+        return True
+
+    @staticmethod
+    def has_level_permission(user, _type, all_id, superiors):
+        """
+        :param user: 当前登录的用户（只可能是经理或大组长）
+        :param _type: 任意
+        :param all_id: 数字组成的字符串数组或all
+        :param superiors: 所有上级
+        :return: True, False
+        """
+        role = user.groups.all()[0].name  # 比如，经理
+        employee_id = user.employee_id
+        role_level = {
+            "经理": "workshop",
+            "大组长": "group"
+        }
+        if _type in superiors:  # 如果要导出上级的报表
+            return False
+        elif _type == role_level[role]:  # 如果要导出平级的报表
+            # 获得所管理平级的id
+            manage_struct_id = globals()[role_level[role].title()].objects.get(employee=employee_id).id
+            if len(all_id) == 1 and int(all_id[0]) == manage_struct_id:
+                return True
+            else:
+                return False
+        else:  # 要导出下级的报表
+            manage_struct_id = globals()[role_level[role].title()].objects.get(employee=employee_id).id
+            all_managed_subordinates = None
+            all_managed_subordinates_id = []  # 所有被当前用户管理的下级
+
+            if _type == "worker":  # worker要用单独的逻辑处理
+                all_managed_subordinates_id = get_all_worker_id(role_level[role], manage_struct_id)
+            elif role == "经理":  # 当前用户是经理
+                all_managed_subordinates = TeamGroupWorkshop.objects \
+                    .filter(workshop_id=manage_struct_id).values(_type).distinct()
+            elif role == "大组长":  # 当前用户是大组长
+                all_managed_subordinates = TeamGroupWorkshop.objects \
+                    .filter(group_id=manage_struct_id).values(_type).distinct()
+
+            if len(all_managed_subordinates_id) == 0:
+                for item in all_managed_subordinates:
+                    all_managed_subordinates_id.append(item[_type])
+
+            for _id in all_id:
+                if int(_id) not in all_managed_subordinates_id:
+                    return False
+            return True
+
+
+class AlertTransferPermission(permissions.BasePermission):
+    """
+    警报传递信息 对象级权限
+    """
+    def has_object_permission(self, request, view, obj):
+        # Instance must have an attribute named `owner`.
+        role_id = request.user.groups.all()[0].id
+        if role_id == 4:  # 总经理/管理员
+            return True
+
+        if obj.alert_convey_info.filter(deal_employee_id=request.user.employee_id):
+            return True
+        return False
+
+
+class AlertConfPermission(permissions.BasePermission):
+    """
+    cfg中的警报条件数据和警报传递数据 对象级权限
+    """
+    def has_permission(self, request, view):
+        role_id = request.user.groups.all()[0].id
+        if role_id == 4:  # 总经理/管理员
+            return True
+        for perm_codename in view.permission_codename:  # 对象级权限验证
+            if not request.user.has_perm(perm_codename):
+                return False
+        return True

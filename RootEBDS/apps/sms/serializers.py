@@ -20,7 +20,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     # https://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#updating-our-serializer
     group_name = serializers.ReadOnlyField(source='group.name')
-    group_manager = serializers.ReadOnlyField(source='group.employee.id')
+    group_manager = serializers.ReadOnlyField(source='group.employee.employee_id')
     group_manager_name = serializers.ReadOnlyField(source='group.employee.name')
 
     class Meta:
@@ -30,7 +30,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class WorkshopSerializer(serializers.ModelSerializer):
     workshop_name = serializers.ReadOnlyField(source='workshop.name')
-    workshop_manager = serializers.ReadOnlyField(source='workshop.employee.id')
+    workshop_manager = serializers.ReadOnlyField(source='workshop.employee.employee_id')
     workshop_manager_name = serializers.ReadOnlyField(source='workshop.employee.name')
 
     class Meta:

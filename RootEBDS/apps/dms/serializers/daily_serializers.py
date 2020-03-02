@@ -136,7 +136,8 @@ class DailyListSerializer(DmsListSerializer):
             change_dict['period'] = [stat_time_list[index], stat_time_list[index + 1] - timedelta(days=1)]
             changes_list.append(change_dict)
 
-        changes_list[-1]['period'][-1] += timedelta(days=1)  # 最后一个值特殊处理
+        if changes_list:
+            changes_list[-1]['period'][-1] += timedelta(days=1)  # 最后一个值特殊处理
         return name, changes_list
 
 

@@ -54,6 +54,8 @@ def assign_standard_perm():
 def assign_average_perm():
     """
     构建average的对象级权限
+    需要在该系统所有avg表中有对应数量的数据时运行
+     TODO: 在系统上线时，所有的avg表中应该有空数据的结果集，并运行该脚本
     :return:
     """
     all_sms = ['dpt', 'workshop', 'group', 'team', 'stat']
@@ -110,7 +112,7 @@ def assign_average_perm():
 
 
 if __name__ == '__main__':
-    # assign_standard_perm()
+    assign_standard_perm()
     assign_average_perm()
 
 
